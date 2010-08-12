@@ -8,7 +8,6 @@ import mx.cinvestav.agendaColab.forms.*;
 import mx.cinvestav.movil.http.HttpPostAgenda;
 import mx.cinvestav.agendaColab.DAO.ContactosDao;
 import mx.cinvestav.agendaColab.DAO.UsuarioDAO;
-import mx.cinvestav.agendaColab.DAO.Cola;
 import mx.cinvestav.agendaColab.comun.ActualizacionUsuariosSincronizados;
 import mx.cinvestav.agendaColab.comun.beans.BeanCita;
 
@@ -46,12 +45,10 @@ public class FlujoController implements CommandListener {
                 //este metodo captura con GUi
                 capturaMyUser();
                 //manda al server y obtiene ya con id
-<<<<<<< HEAD
-=======
                 myUsuer = getServidor().registraUsuario(myUsuer);
                 //guarda el dao local
                 UsuarioDAO.guardaMyUsuario(myUsuer);
->>>>>>> 571c7d78e9a1433114453d6431c948a524a642ae
+
             }
         }
         return myUsuer;
