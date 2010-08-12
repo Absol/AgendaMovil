@@ -64,6 +64,10 @@ public class Respuesta extends Evento{
         }
     }
 
+    public BeanUsuario getUsuario() {
+        return usuario;
+    }
+
     public int getMiTipo() {
         return miTipo;
     }

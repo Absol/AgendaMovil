@@ -56,29 +56,31 @@ private PullController controller;
         switch (tipo) {
             case ActualizacionUsuariosSincronizados.miTipo: {
                 ActualizacionUsuariosSincronizados act
-                        = new ActualizacionUsuariosSincronizados();
+                        = (ActualizacionUsuariosSincronizados) eve;
                 throw new UnsupportedOperationException("Not yet implemented");
             }
             case Sincronizacion.miTipo: {
-                Sincronizacion sincronizacion = new Sincronizacion();
+                Sincronizacion sincronizacion = (Sincronizacion) eve;
                 procesaSincro(sincronizacion);
+                controller.siguiente();
                 break;
             }
             case Cancelacion.miTipo: {
-                Cancelacion cancel = new Cancelacion();
+                Cancelacion cancel = (Cancelacion) eve;
                 controller.avisaCancelacion(cancel.getCita());
                 break;
             }
             case Respuesta.miTipo: {
-                Respuesta resp = new Respuesta();
-                controller.avisarRespuesta(resp.getCita(), resp.isRespuesta());
+                Respuesta resp = (Respuesta) eve;
+                controller.avisarRespuesta(resp.getCita()
+                        , resp.getUsuario(), resp.isRespuesta());
                 break;
             }
             case Notificacion.miTipo: {
                 throw new UnsupportedOperationException("Not yet implemented");
             }
             case Confirmacion.miTipo: {
-                Confirmacion conf = new Confirmacion();
+                Confirmacion conf = (Confirmacion) eve;
                 BeanUsuario usu
                         = (BeanUsuario) conf.getListaUsuarios().elementAt(0);
                 controller.pedirConfirmacion(conf.getCita(), usu);
@@ -89,10 +91,12 @@ private PullController controller;
             }
             case CitaPublica.miTipo: {
                 System.out.println("No se debe recibir CitaPublica");
+                controller.siguiente();
                 break;
             }
             case PullRequest.miTipo: {
                 System.out.println("No se debe recibir PullRequest");
+                controller.siguiente();
                 break;
             }
         }
@@ -106,12 +110,15 @@ private PullController controller;
             switch(camb.getTipoCambio()){
                 case Cambio.ALTA: {
                     dao.create(camb.getContacto());
+                    break;
                 }
                 case Cambio.BAJA: {
                     dao.borrar(new Integer(camb.getContacto().getidContacto()));
+                    break;
                 }
                 case Cambio.MODIFICACION: {
                     dao.modificar(camb.getContacto());
+                    break;
                 }
             }
         }
