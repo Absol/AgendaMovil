@@ -7,8 +7,10 @@ import mx.cinvestav.agendaColab.comun.beans.BeanUsuario;
 import mx.cinvestav.agendaColab.forms.*;
 import mx.cinvestav.movil.http.HttpPostAgenda;
 import mx.cinvestav.agendaColab.DAO.ContactosDao;
-import mx.cinvestav.agendaColab.DAO.DaoUsuario;
+import mx.cinvestav.agendaColab.DAO.UsuarioDAO;
 import mx.cinvestav.agendaColab.DAO.Cola;
+import mx.cinvestav.agendaColab.comun.ActualizacionUsuariosSincronizados;
+import mx.cinvestav.agendaColab.comun.beans.BeanCita;
 
 /**
  *
@@ -35,20 +37,24 @@ public class FlujoController implements CommandListener {
         }
         return servidor;
     }
-//BeanUsuario getMyUsuario() {
-   public void  getMyUsuario() {
+
+    public BeanUsuario getMyUsuario() {
         if (myUsuer == null) {
             //lo cargo local
-            myUsuer = DaoUsuario.getMyUser();
+            myUsuer = UsuarioDAO.getMyUser();
             if (myUsuer == null) {
                 //este metodo captura con GUi
                 capturaMyUser();
-                //myUsuer =
                 //manda al server y obtiene ya con id
+<<<<<<< HEAD
+=======
+                myUsuer = getServidor().registraUsuario(myUsuer);
+                //guarda el dao local
+                UsuarioDAO.guardaMyUsuario(myUsuer);
+>>>>>>> 571c7d78e9a1433114453d6431c948a524a642ae
             }
         }
-
-       // return myUsuer;
+        return myUsuer;
     }
 
     //Comandos Logging
@@ -168,8 +174,10 @@ public class FlujoController implements CommandListener {
             }
         //Sincronizar
         if (c == new_sinc) {
+            Cola.guardaCambioSincro(null, ActualizacionUsuariosSincronizados.NUEVA_SINCRO);
         }
         if (c == des_sinc) {
+            Cola.guardaCambioSincro(null, ActualizacionUsuariosSincronizados.BORRA_SINCRO);
         }
         //Ver Citas Grupo
         if (c == ok_c) {
@@ -195,7 +203,10 @@ public class FlujoController implements CommandListener {
 
         }
         if(c== add_cita){
-            f_agendar.getDatos();
+            BeanCita citaNueva = f_agendar.getDatos();
+            Cola.guardaCitaConjunta(citaNueva, null);
+            if(citaNueva.getNivel() != BeanCita.PRIVADA)
+                Cola.guardaCitaPublica(citaNueva);
         }
         if(c== add_usr){
             
