@@ -11,7 +11,7 @@ import mx.cinvestav.agendaColab.forms.BuscarUsuForma;
  *
  * @author absol
  */
-public class BuscaUsuarioControlelr implements CommandListener{
+public class BuscaUsuarioControlelr implements CommandListener {
 private BuscarUsuForma formaBusc = new BuscarUsuForma();
 private Command buscar = new Command("Buscar", Command.OK, 1);
 private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
@@ -19,23 +19,38 @@ private BeanUsuario usuario = null;
 private FlujoController anterior;
 private HttpPostAgenda server;
 
-    public void buscaUsuario(HttpPostAgenda post, FlujoController controllerMain){
+    public BuscaUsuarioControlelr(HttpPostAgenda post, FlujoController controllerMain) {
         anterior = controllerMain;
         server = post;
         formaBusc.addCommand(buscar);
         formaBusc.addCommand(cancelar);
-        controllerMain.display.setCurrent(formaBusc);
+        formaBusc.setCommandListener(this);
+    }
+
+    public void buscaUsuario() {
+        anterior.display.setCurrent(formaBusc);
     }
 
     public void commandAction(Command c, Displayable d) {
-        if(c == buscar){
-            BeanUsuario usu = server.buscaUsuario(new BeanUsuario(0, formaBusc.getLogin(), null));
-            if(usu != null)
-                anterior.addUsuario(usu);
-            else
-                anterior.display.setCurrent(formaBusc);
-        } else if(c == cancelar)
+        if (c == buscar) {
+            (new Thread(new hilo())).start();
+        } else if (c == cancelar) {
             anterior.continuaCapturaCita();
+        }
     }
 
+    class hilo implements Runnable {
+
+        public hilo() {
+        }
+
+        public void run() {
+            BeanUsuario usu = server.buscaUsuario(new BeanUsuario(0, formaBusc.getLogin(), null));
+            if (usu != null) {
+                anterior.addUsuario(usu);
+            } else {
+                anterior.display.setCurrent(formaBusc);
+            }
+        }
+    }
 }
