@@ -21,10 +21,11 @@ public class AgendaPull extends MIDlet {
             EventoColaDAO cola = new EventoColaDAO();
             Vector vecEnviar, vecRecibir;
             vecEnviar = cola.getListaEventos(usu);
+            cola.deleteAllRecordStore("evento");
 
-          /*HttpPostAgenda servidor
+          HttpPostAgenda servidor
                     = new HttpPostAgenda("belldandy.no-ip.info/AgendaServer/");
-          vecRecibir = servidor.pullEventos(vecEnviar);*/
+          vecRecibir = servidor.pullEventos(vecEnviar);
              Enumeration enumeration=vecEnviar.elements();
              while(enumeration.hasMoreElements()){
                  System.out.println(enumeration.nextElement());

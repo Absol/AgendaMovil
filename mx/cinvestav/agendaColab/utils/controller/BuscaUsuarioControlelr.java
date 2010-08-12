@@ -33,6 +33,8 @@ private HttpPostAgenda server;
 
     public void commandAction(Command c, Displayable d) {
         if (c == buscar) {
+            formaBusc.removeCommand(buscar);
+            formaBusc.removeCommand(cancelar);
             (new Thread(new hilo())).start();
         } else if (c == cancelar) {
             anterior.continuaCapturaCita();
@@ -49,6 +51,8 @@ private HttpPostAgenda server;
             if (usu != null) {
                 anterior.addUsuario(usu);
             } else {
+        formaBusc.addCommand(buscar);
+        formaBusc.addCommand(cancelar);
                 anterior.display.setCurrent(formaBusc);
             }
         }

@@ -117,6 +117,8 @@ private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
                 cola.guardarEvento(new CitaPublica(fcita));
             if(usuarios.size() > 0)
                 cola.guardarEvento(new Confirmacion(usuarios, fcita));
+            display.setCurrent(menu);
+            menu.setCommandListener(this);
         }
     }
 
