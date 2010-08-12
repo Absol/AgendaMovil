@@ -45,7 +45,8 @@ private Command regresarPrincipal = new Command("Menú principal", Command.EXIT,
 //Comandos Logging
 private Command save = new Command("Guardar", Command.OK,1);
 //Captura cita
-private Command guardaCita =new Command("Guardar", Command.OK, 1);
+private Command guardaCita = new Command("Guardar", Command.SCREEN, 2);
+private Command addUsuario = new Command("Agregar usuarios", Command.SCREEN, 2);
 private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
 
     HttpPostAgenda getServidor() {
@@ -100,6 +101,9 @@ private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
         } else if(c == cancelar) {
             display.setCurrent(menu);
             menu.setCommandListener(this);
+        } else if(c == addUsuario) {
+            BuscaUsuarioControlelr busca = new BuscaUsuarioControlelr(servidor, this);
+            busca.buscaUsuario();
         } else if(c == nuevaCita) {
             muestraCapturaCita();
         } else if(c == guardaCita) {
@@ -151,6 +155,7 @@ private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
             fCita.setTitle("Captura cita");
         usuarios = new Vector();
         fCita.setCaptura();
+        fCita.addCommand(addUsuario);
         fCita.addCommand(guardaCita);
         fCita.addCommand(cancelar);
         fCita.setCommandListener(this);
@@ -163,6 +168,7 @@ private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
     }
 
     void continuaCapturaCita() {
+        fCita.setCommandListener(this);
         display.setCurrent(fCita);
     }
 }
