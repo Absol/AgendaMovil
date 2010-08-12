@@ -1,7 +1,7 @@
 package mx.cinvestav.agendaColab;
 
-import javax.microedition.midlet.*;
-import mx.cinvestav.agendaColab.FlujoController;
+import javax.microedition.midlet.MIDlet;
+import mx.cinvestav.agendaColab.utils.controller.FlujoController;
 
 /**
  * @author eduardogiron

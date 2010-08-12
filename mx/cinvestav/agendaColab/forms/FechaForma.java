@@ -17,7 +17,7 @@ public class FechaForma extends Form {
     private DateField fechaIni;
     private DateField fechaFin;
     private ChoiceGroup nivel;
-    private int idNivel;
+    private int idNivel = -1;
     private int idCita;
     private int idServidor;
 
@@ -26,6 +26,9 @@ public class FechaForma extends Form {
         asunto = new TextField("Asunto", "", 30, TextField.ANY);
         fechaIni = new DateField("Hora de inicio:", DateField.DATE_TIME, TimeZone.getTimeZone("GMT"));
         fechaFin = new DateField("Hora de término", DateField.DATE_TIME, TimeZone.getTimeZone("GMT"));
+        this.append(asunto);
+        this.append(fechaIni);
+        this.append(fechaFin);
         idNivel = ponNivel();
     }
 
@@ -61,7 +64,8 @@ public class FechaForma extends Form {
 
     public void setCaptura(){
         asunto.setConstraints(TextField.ANY);
-        idNivel = ponNivel();
+        if(idNivel == -1)
+            idNivel = ponNivel();
     }
 
     private int ponNivel(){
@@ -69,9 +73,6 @@ public class FechaForma extends Form {
         nivel.append("Privada", null);
         nivel.append("Mostrar Ocupado", null);
         nivel.append("Pública", null);
-        this.append(asunto);
-        this.append(fechaIni);
-        this.append(fechaFin);
         nivel.setSelectedIndex(0, true);
         return this.append(nivel);
     }
