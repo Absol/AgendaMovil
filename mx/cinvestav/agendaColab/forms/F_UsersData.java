@@ -28,7 +28,7 @@ public class F_UsersData extends Form implements CommandListener {
         name = new TextField("Nombre:    ", "", 12, TextField.ANY);
         apPaterno = new TextField("A. Paterno:", "", 12, TextField.ANY);
         apMaterno = new TextField("A. Materno:", "", 12, TextField.ANY);
-        mail = new TextField("Mail","", 25,TextField.ANY);
+        mail = new TextField("Mail","", 25,TextField.EMAILADDR);
         tel = new TextField("Phone","", 10, TextField.PHONENUMBER);
         this.append(name);
         this.append(apPaterno);

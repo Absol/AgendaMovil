@@ -7,9 +7,13 @@ import mx.cinvestav.agendaColab.comun.beans.BeanUsuario;
 import mx.cinvestav.agendaColab.forms.*;
 import mx.cinvestav.movil.http.HttpPostAgenda;
 import mx.cinvestav.agendaColab.DAO.ContactosDao;
+import mx.cinvestav.agendaColab.DAO.EventoColaDAO;
+import mx.cinvestav.agendaColab.DAO.GenericEventDAO;
 import mx.cinvestav.agendaColab.DAO.UsuarioDAO;
-import mx.cinvestav.agendaColab.DAO.Cola;
 import mx.cinvestav.agendaColab.comun.ActualizacionUsuariosSincronizados;
+import mx.cinvestav.agendaColab.comun.CitaPublica;
+import mx.cinvestav.agendaColab.comun.Confirmacion;
+import mx.cinvestav.agendaColab.comun.Sincronizacion;
 import mx.cinvestav.agendaColab.comun.beans.BeanCita;
 
 /**
@@ -17,7 +21,7 @@ import mx.cinvestav.agendaColab.comun.beans.BeanCita;
  * @author eduardogiron
  */
 public class FlujoController implements CommandListener {
-
+private GenericEventDAO cola = new EventoColaDAO();
     public Display display;
     Agenda_Colaborativa applic;
     F_Menu menu;
@@ -49,6 +53,7 @@ public class FlujoController implements CommandListener {
                 myUsuer = getServidor().registraUsuario(myUsuer);
                 //guarda el dao local
                 UsuarioDAO.guardaMyUsuario(myUsuer);
+
             }
         }
         return myUsuer;
@@ -89,7 +94,10 @@ public class FlujoController implements CommandListener {
         this.getMyUsuario();
         menu.addCommand(exit);
         menu.addCommand(aceptar);
-        display.setCurrent(menu);
+        if(myUsuer!=null)
+            display.setCurrent(menu);
+        else
+            display.setCurrent(f_user);
 
     }
 
@@ -146,8 +154,12 @@ public class FlujoController implements CommandListener {
         if (c == guardar) {
             //Agregar función de almacenamiento
             BeanContacto cont = F_Alta.getDatos();
+
             ContactosDao.guardaContacto(cont);
-            Cola.guadaContacto(new Cambio(cont, Cambio.ALTA));
+            Sincronizacion sincro = new Sincronizacion();
+            sincro.add(new Cambio(cont, Cambio.ALTA));
+            cola.guardarEvento(sincro);
+
             display.setCurrent(menu);
         }
         //Buscar Contacto
@@ -168,10 +180,16 @@ public class FlujoController implements CommandListener {
             }
         //Sincronizar
         if (c == new_sinc) {
-            Cola.guardaCambioSincro(null, ActualizacionUsuariosSincronizados.NUEVA_SINCRO);
+            ActualizacionUsuariosSincronizados act
+                    = new ActualizacionUsuariosSincronizados(null
+                    , ActualizacionUsuariosSincronizados.NUEVA_SINCRO);
+            cola.guardarEvento(act);
         }
         if (c == des_sinc) {
-            Cola.guardaCambioSincro(null, ActualizacionUsuariosSincronizados.BORRA_SINCRO);
+            ActualizacionUsuariosSincronizados act
+                    = new ActualizacionUsuariosSincronizados(null
+                    , ActualizacionUsuariosSincronizados.BORRA_SINCRO);
+            cola.guardarEvento(act);
         }
         //Ver Citas Grupo
         if (c == ok_c) {
@@ -198,15 +216,21 @@ public class FlujoController implements CommandListener {
         }
         if(c== add_cita){
             BeanCita citaNueva = f_agendar.getDatos();
-            Cola.guardaCitaConjunta(citaNueva, null);
-            if(citaNueva.getNivel() != BeanCita.PRIVADA)
-                Cola.guardaCitaPublica(citaNueva);
+            Confirmacion citaCon = new Confirmacion(null, citaNueva);
+            cola.guardarEvento(citaCon);
+            if(citaNueva.getNivel() != BeanCita.PRIVADA){
+                CitaPublica cita = new CitaPublica(citaNueva);
+                cola.guardarEvento(cita);
+            }
         }
         if(c== add_usr){
             
         }
         if(c== save){
             myUsuer = f_user.get_data();
+            //myUsuer = getServidor().registraUsuario(myUsuer);
+                //guarda el dao local
+            //DaoUsuario.guardaMyUsuario(myUsuer);
             display.setCurrent(menu);
         }
     }
