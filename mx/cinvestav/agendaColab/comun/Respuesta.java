@@ -86,8 +86,7 @@ public class Respuesta extends Evento{
         return cita;
     }
 
-    public String toString()
-    {
-        return "(" + cita + ", " + usuario + ":" + respuesta + ")";
+     public String toString(){
+        return miTipo+"*"+cita+"*"+usuario+"*"+respuesta;
     }
 }

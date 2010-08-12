@@ -34,10 +34,7 @@ public class ActualizacionUsuariosSincronizados extends Evento {
         return tipoAct;
     }
 
-    public String toString()
-    {
-        return "(" + tipoAct + ", " + usuario + ")";
-    }
+  
 
     public void read(DataInputStream dInput) {
         try {
@@ -62,4 +59,8 @@ public class ActualizacionUsuariosSincronizados extends Evento {
 	public int getMiTipo() {
 		return miTipo;
 	}
+
+     public String toString(){
+            return miTipo+"*"+usuario+"*"+tipoAct;
+        }
 }

@@ -200,7 +200,7 @@ public class BeanContacto {
         }
     }
 
-    public String toString(){
-        return idContacto+" "+nombre+" "+apPaterno+" "+apMaterno+" "+email+" "+telefono;
+   public String toString(){
+        return idContacto+"-"+idUsuario+"-"+nombre+"-"+apPaterno+"-"+apMaterno+"-"+email+"-"+telefono;
     }
 }

@@ -33,10 +33,7 @@ public class BeanUsuario {
         return pass;
     }
 
-    public String toString()
-    {
-        return "(" + id + ", " + login + ")";
-    }
+   
 
     public void read(DataInputStream dInput) {
         try {
@@ -103,5 +100,9 @@ public class BeanUsuario {
         }
 
 
+    }
+
+    public String toString(){
+        return id+"-"+login+"-"+pass;
     }
 }

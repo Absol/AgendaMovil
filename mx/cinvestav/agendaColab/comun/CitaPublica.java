@@ -35,4 +35,8 @@ private BeanCita cita;
     public int getMiTipo() {
         return miTipo;
     }
+
+    public String toString(){
+        return miTipo+"*"+cita.toString();
+    }
 }
