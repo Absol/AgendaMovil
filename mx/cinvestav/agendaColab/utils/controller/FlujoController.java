@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Vector;
 import mx.cinvestav.agendaColab.*;
 import javax.microedition.lcdui.*;
+import mx.cinvestav.agendaColab.DAO.CItaDAO;
 import mx.cinvestav.agendaColab.comun.Cambio;
 import mx.cinvestav.agendaColab.comun.beans.BeanContacto;
 import mx.cinvestav.agendaColab.comun.beans.BeanUsuario;
@@ -16,6 +17,7 @@ import mx.cinvestav.agendaColab.DAO.UsuarioDAO;
 import mx.cinvestav.agendaColab.comun.ActualizacionUsuariosSincronizados;
 import mx.cinvestav.agendaColab.comun.CitaPublica;
 import mx.cinvestav.agendaColab.comun.Confirmacion;
+import mx.cinvestav.agendaColab.comun.ConfirmacionReagendado;
 import mx.cinvestav.agendaColab.comun.Sincronizacion;
 import mx.cinvestav.agendaColab.comun.beans.BeanCita;
 
@@ -25,6 +27,7 @@ import mx.cinvestav.agendaColab.comun.beans.BeanCita;
  */
 public class FlujoController implements CommandListener {
 private GenericEventDAO cola = new EventoColaDAO();
+private CItaDAO cItaDAO=new CItaDAO();
 protected Display display;
 Agenda_Colaborativa applic;
 MenuPrincipal menu;
@@ -101,7 +104,15 @@ private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
             muestraCapturaCita();
         } else if(c == guardaCita) {
             //Poner dao guardar cita desde fCita
+            BeanCita fcita=fCita.getDatos();
+            cItaDAO=new CItaDAO();
+            cItaDAO.create(fcita);
+            
             //Poner dao cola si el nivel es diferente de PRIVADO
+            if(fcita.getNivel()!=BeanCita.PRIVADA)
+                cola.guardarEvento(new CitaPublica(fcita));
+            if(usuarios.size() > 0)
+                cola.guardarEvento(new Confirmacion(usuarios, fcita));
         }
     }
 
@@ -125,9 +136,10 @@ private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
         listaCitas.addCommand(regresarPrincipal);
         listaCitas.setCommandListener(this);
         //Cargar citas almacenadas
-        Vector vec = new Vector(3);
-        vec.addElement(new BeanCita(2,"cita1", new Date(), new Date(), 2, 14));
-        vec.addElement(new BeanCita(3,"cita2", new Date(), new Date(), 1, 15));
+        //Vector vec = new Vector(3);
+        //vec.addElement(new BeanCita(2,"cita1", new Date(), new Date(), 2, 14));
+        //vec.addElement(new BeanCita(3,"cita2", new Date(), new Date(), 1, 15));
+        Vector vec=cItaDAO.getLista();
         listaCitas.setElementos(vec);
         display.setCurrent(listaCitas);
     }

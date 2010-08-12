@@ -121,7 +121,6 @@ public static final int PUBLICA = 2;
     }
 
     public String toString(){
-        return "("+idCita+","+idServidor+")"
-                +asunto+" "+fechaInicio+"-"+fechaTermino;
+        return idCita+"-"+asunto+"-"+fechaInicio.getTime()+"-"+fechaTermino.getTime()+"-"+nivel+"-"+idServidor;
     }
 }

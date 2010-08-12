@@ -87,7 +87,7 @@ public class Confirmacion extends Evento {
     }
 
     public String toString() {
-        return "Confirmacion{" + "cita=" + cita + "listaUsuarios=" + listaUsuarios + '}';
+        return miTipo+"*"+cita+"*"+listaUsuarios;
     }
 
 }
