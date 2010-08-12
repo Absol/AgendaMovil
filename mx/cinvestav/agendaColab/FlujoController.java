@@ -26,8 +26,8 @@ private GenericEventDAO cola = new EventoColaDAO();
     Agenda_Colaborativa applic;
     F_Menu menu;
     F_UsersData F_Alta, F_Info;
-    F_Contacts F_Lista, F_Lista_Conect;
-    F_Buscar f_buscar,F_B_Contacts;
+    F_Contacts F_Lista, F_Lista_Conect,F_Lista_Add;
+    F_Buscar f_buscar,F_B_Contacts,f_bus_sinc;
     F_Agenda f_agenda;
     F_Citas f_cita,f_cp;
     F_User f_user;
@@ -69,13 +69,16 @@ private GenericEventDAO cola = new EventoColaDAO();
     //Comandos Alta Contacto
     private Command guardar = new Command("Save", Command.OK, 1);
     //Comandos Buscar Contacto
-    private Command ok = new Command("Selected", Command.OK, 1);
+    private Command ok = new Command("Abrir Seleccionado", Command.OK, 1);
     private Command buscar = new Command("Buscar", Command.OK, 1);
         //Busqueda personalizada
         private Command busq = new Command("Aceptar",Command.OK,1);
+        private Command actualizar = new Command("Actualizar", Command.OK,1);
     //Comandos Sincronizar Contactos
     private Command new_sinc = new Command("Nueva Sincronización", Command.OK, 1);
     private Command des_sinc = new Command("Desincronizar", Command.OK, 1);
+        //Comandos Buscar usuario a sincronizar
+        private Command bus_usr = new Command("Buscar Contacto", Command.OK, 1);
     //Comandos Ver citas Contactos
     private Command ok_c = new Command("Aceptar", Command.OK, 1);
     //Comandos Agenda 
@@ -84,7 +87,7 @@ private GenericEventDAO cola = new EventoColaDAO();
      private Command add_cita = new Command("Guardar", Command.OK, 1);
       private Command add_usr = new Command("Añadir Usuario", Command.OK, 1);
        //private Command ok_a = new Command("Aceptar", Command.OK, 1);
-
+    private Command add_contac= new Command("Aceptar", Command.OK,1);
     //Comandos
     public FlujoController(Agenda_Colaborativa app) {
         applic = app;
@@ -165,29 +168,52 @@ private GenericEventDAO cola = new EventoColaDAO();
         //Buscar Contacto
         if (c == ok) {
             String name = F_Lista.getString(F_Lista.getSelectedIndex());
+            F_Info = new F_UsersData(this,"Contact "+name,myUsuer);
+            F_Info.addCommand(actualizar);
+            F_Info.addCommand(back);
+            F_Info.setCommandListener(this);
+            display.setCurrent(F_Info);
             //Agregar función de busqueda de contacto
 
         }
         if (c == buscar) {
             f_buscar= new F_Buscar(this,"Buscar Contacto");
             f_buscar.addCommand(busq);
+            f_buscar.addCommand(back);
             f_buscar.setCommandListener(this);
             display.setCurrent(f_buscar);
         }
             if(c== busq){
                 F_Info = new F_UsersData(this,"Contact Info",myUsuer);
-                F_Info.load(null);
+                F_Info.addCommand(actualizar);
+                F_Info.addCommand(back);
+                F_Info.setCommandListener(this);
+                display.setCurrent(F_Info);
+                //F_Info.load(null);
             }
         //Sincronizar
         if (c == new_sinc) {
+            f_bus_sinc= new F_Buscar(this,"Nueva Sincronización");
+            f_bus_sinc.addCommand(back);
+            f_bus_sinc.addCommand(bus_usr);
+            f_bus_sinc.setCommandListener(this);
+            display.setCurrent(f_bus_sinc);
+            
+        }
+        //Buscar contacto para sincronizacion
+        if(c== bus_usr){
+            // metodo para busqueda de usuario
             ActualizacionUsuariosSincronizados act
                     = new ActualizacionUsuariosSincronizados(null
                     , ActualizacionUsuariosSincronizados.NUEVA_SINCRO);
             cola.guardarEvento(act);
+
         }
         if (c == des_sinc) {
+            String name_usr= F_Lista_Conect.getString(F_Lista_Conect.getSelectedIndex());
+            BeanUsuario b_u= new BeanUsuario(0,name_usr,"");
             ActualizacionUsuariosSincronizados act
-                    = new ActualizacionUsuariosSincronizados(null
+                    = new ActualizacionUsuariosSincronizados(b_u
                     , ActualizacionUsuariosSincronizados.BORRA_SINCRO);
             cola.guardarEvento(act);
         }
@@ -223,8 +249,20 @@ private GenericEventDAO cola = new EventoColaDAO();
                 cola.guardarEvento(cita);
             }
         }
+        //Abre la ventana para seleccionar el usuario a añadir
         if(c== add_usr){
+            F_Lista_Add = new F_Contacts(this,"Selecciona usuarios a añadir");
+            F_Lista_Add.load_contacts();
+            F_Lista_Add.addCommand(add_contac);
+            F_Lista_Add.setCommandListener(this);
+            display.setCurrent(F_Lista_Add);
+            }
+        if(c== add_contac){
+            //Metodo para añadir contacto en el server
+            String name;
+            name = F_Lista_Add.getString(F_Lista_Add.getSelectedIndex());
             
+            display.setCurrent(f_agendar);
         }
         if(c== save){
             myUsuer = f_user.get_data();
