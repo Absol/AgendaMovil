@@ -9,8 +9,12 @@ import mx.cinvestav.agendaColab.comun.beans.BeanCita;
 public class ConfirmacionReagendado extends Confirmacion{
 public static final int miTipo = 14;
 
-    public ConfirmacionReagendado(BeanCita cita) {
-        super(new Vector(), cita);
+    public ConfirmacionReagendado(Vector vec, BeanCita cita) {
+        super(vec, cita);
+    }
+
+    ConfirmacionReagendado() {
+        super();
     }
 
     public int getMiTipo() {
