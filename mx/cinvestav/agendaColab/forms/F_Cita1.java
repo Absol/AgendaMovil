@@ -27,16 +27,15 @@ public class F_Cita1 extends List implements CommandListener{
     }
     public void setElementos(Vector c){
         citas=c;
-        //this.append(cita.toString(), null);
-        //this.append("28/07/10 14:30-16:30 Ocupado", null);
-        //this.append("29/07/10 11:00-12:00 Reunion", null);
-        //this.append("29/07/10 14:30-16:30 Inventario", null);
+        
 
         Enumeration e=citas.elements();
         while(e.hasMoreElements()){
             BeanCita citas=(BeanCita)e.nextElement();
             this.append(citas.getAsunto(),null);
         }
+
+        citas.removeAllElements();
     }
 
     public BeanCita getCitaSelected()
