@@ -16,7 +16,8 @@ public class DaoUsuario {
      * Si esta guardado, permite recuperar el usuario actual
      */
     public static BeanUsuario getMyUser(){
-        BeanUsuario usuario= new BeanUsuario(5,"edward","hola");
+        BeanUsuario usuario=new BeanUsuario(5,"edward","hola");
+        System.out.println(usuario.getLogin());
         return usuario;
     }
     /**

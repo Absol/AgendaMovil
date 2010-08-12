@@ -45,9 +45,6 @@ public class FlujoController implements CommandListener {
                 capturaMyUser();
                 //myUsuer =
                 //manda al server y obtiene ya con id
-                myUsuer = getServidor().registraUsuario(myUsuer);
-                //guarda el dao local
-                DaoUsuario.guardaMyUsuario(myUsuer);
             }
         }
 
@@ -89,7 +86,10 @@ public class FlujoController implements CommandListener {
         this.getMyUsuario();
         menu.addCommand(exit);
         menu.addCommand(aceptar);
-        display.setCurrent(menu);
+        if(myUsuer!=null)
+            display.setCurrent(menu);
+        else
+            display.setCurrent(f_user);
 
     }
 
@@ -202,6 +202,9 @@ public class FlujoController implements CommandListener {
         }
         if(c== save){
             myUsuer = f_user.get_data();
+            //myUsuer = getServidor().registraUsuario(myUsuer);
+                //guarda el dao local
+            //DaoUsuario.guardaMyUsuario(myUsuer);
             display.setCurrent(menu);
         }
     }
