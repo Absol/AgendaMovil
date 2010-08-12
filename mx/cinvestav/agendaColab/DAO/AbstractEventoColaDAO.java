@@ -3,10 +3,12 @@ package mx.cinvestav.agendaColab.DAO;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.Vector;
 
 import javax.microedition.rms.InvalidRecordIDException;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
+import javax.microedition.rms.RecordStoreNotFoundException;
 import javax.microedition.rms.RecordStoreNotOpenException;
 
 import mx.cinvestav.agendaColab.comun.Evento;
@@ -15,6 +17,7 @@ import mx.cinvestav.agendaColab.dataStorage.SimpleDataSource;
 
 public abstract class AbstractEventoColaDAO implements GenericEventDAO{
 	protected SimpleDataSource datasource;
+        protected Vector vec=new Vector();
 	
 	public String getRecord(int id,String dataStorage){
         String toReturn = "";
@@ -47,6 +50,15 @@ public abstract class AbstractEventoColaDAO implements GenericEventDAO{
             System.out.println(e.getMessage());
         }
         return toReturn;
+    }
+
+    public void deleteAllRecordStore(String dataStorage) {
+        try {
+            datasource.closeRecordStore();
+            RecordStore.deleteRecordStore(dataStorage);
+        } catch (RecordStoreException ex) {
+            ex.printStackTrace();
+        }
     }
 	
 

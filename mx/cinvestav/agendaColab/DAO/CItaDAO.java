@@ -23,7 +23,7 @@ import mx.cinvestav.agendaColab.utils.Utils;
  *
  * @author rockderick
  */
-public class CItaDAO extends AbstractDAO{
+public class CItaDAO extends AbstractDataDAO{
 
     private static final String dataStorage="cita";
 
@@ -82,8 +82,8 @@ public class CItaDAO extends AbstractDAO{
                     Date fechaInicio=new Date(Long.parseLong(arr[2]));
                     Date fechaTermino=new Date(Long.parseLong(arr[3]));
                     int nivel=new Integer(Integer.parseInt(arr[4])).intValue();
-                                    
-                    cita=new BeanCita(id, asunto, fechaInicio, fechaTermino,nivel,0);
+                    int idServidor=new Integer(Integer.parseInt(arr[5])).intValue();                
+                    cita=new BeanCita(id, asunto, fechaInicio, fechaTermino,nivel,idServidor);
 	                
 	                Integer clv=new Integer(Integer.parseInt(arr[0]));
 	                
@@ -120,8 +120,8 @@ public class CItaDAO extends AbstractDAO{
                     Date fechaInicio=new Date(Long.parseLong(arr[2]));
                     Date fechaTermino=new Date(Long.parseLong(arr[3]));
                     int nivel=new Integer(Integer.parseInt(arr[4])).intValue();
-                                    
-                    cita=new BeanCita(id, asunto, fechaInicio, fechaTermino,nivel,0);
+                    int idServidor=new Integer(Integer.parseInt(arr[5])).intValue();               
+                    cita=new BeanCita(id, asunto, fechaInicio, fechaTermino,nivel,idServidor);
                     
                     vec.addElement(cita);
 	            }
@@ -146,8 +146,8 @@ public class CItaDAO extends AbstractDAO{
                     Date fechaInicio=new Date(Long.parseLong(arr[2]));
                     Date fechaTermino=new Date(Long.parseLong(arr[3]));
                     int nivel=new Integer(Integer.parseInt(arr[4])).intValue();
-                                    
-                    cita=new BeanCita(id, asunto, fechaInicio, fechaTermino,nivel,0);
+                    int idServidor=new Integer(Integer.parseInt(arr[5])).intValue();                
+                    cita=new BeanCita(id, asunto, fechaInicio, fechaTermino,nivel,idServidor);
 
 	                Integer clv=new Integer(Integer.parseInt(arr[0]));
 	                if(clv.equals(identifier)){

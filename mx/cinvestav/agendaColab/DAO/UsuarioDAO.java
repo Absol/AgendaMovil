@@ -28,7 +28,7 @@ import mx.cinvestav.agendaColab.dataStorage.SimpleDataSource;
  *
  * @author rockderick
  */
-public class UsuarioDAO extends AbstractDAO{
+public class UsuarioDAO extends AbstractDataDAO{
      private static final String dataStorage="usuario";
 
 	public UsuarioDAO(){
@@ -94,12 +94,5 @@ public class UsuarioDAO extends AbstractDAO{
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    public static void guardaMyUsuario(BeanUsuario myUsuer) {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
 
-    public static BeanUsuario getMyUser() {
-        //To-Do desharcodear
-        return new BeanUsuario(1, "Absol", "Zapato");
-    }
 }

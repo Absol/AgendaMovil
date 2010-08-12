@@ -12,8 +12,6 @@ package mx.cinvestav.agendaColab.DAO;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Date;
-import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.microedition.rms.RecordStore;
@@ -28,10 +26,10 @@ import mx.cinvestav.agendaColab.dataStorage.SimpleDataSource;
 
 
 
-public class ContactoDAO extends AbstractDAO {
+public class ContactoDAO extends AbstractDataDAO {
 
 	
-        private static final String dataStorage="contacto";
+    private static final String dataStorage="contacto";
 
 	public ContactoDAO(){
 		//super(objMidlet);
