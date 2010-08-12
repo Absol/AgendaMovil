@@ -16,6 +16,7 @@ import mx.cinvestav.agendaColab.comun.Cambio;
 import mx.cinvestav.agendaColab.comun.CitaPublica;
 import mx.cinvestav.agendaColab.comun.Confirmacion;
 import mx.cinvestav.agendaColab.comun.Evento;
+import mx.cinvestav.agendaColab.comun.PullRequest;
 import mx.cinvestav.agendaColab.comun.Respuesta;
 import mx.cinvestav.agendaColab.comun.Sincronizacion;
 import mx.cinvestav.agendaColab.comun.beans.BeanCita;
@@ -96,7 +97,7 @@ public class EventoColaDAO  extends AbstractEventoColaDAO{
                 BeanCita cita;
                 String usuarioString,citaString;
                 //Se añade al principio del Vector un usuario
-                vec.addElement(user);
+                vec.addElement(new PullRequest(user));
 
 		 try{
 
