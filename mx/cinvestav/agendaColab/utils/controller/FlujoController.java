@@ -31,6 +31,7 @@ MenuPrincipal menu;
 F_Cita1 listaCitas = null;
 private FechaForma fCita = null;
 F_User f_user;
+private Vector usuarios = new Vector();
 private static HttpPostAgenda servidor = null;
 //Comandos Menu Principal
 private Command exit = new Command("Salir", Command.EXIT, 1);
@@ -136,10 +137,20 @@ private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
             fCita = new FechaForma("Captura cita");
         else
             fCita.setTitle("Captura cita");
+        usuarios = new Vector();
         fCita.setCaptura();
         fCita.addCommand(guardaCita);
         fCita.addCommand(cancelar);
         fCita.setCommandListener(this);
+        display.setCurrent(fCita);
+    }
+
+    void addUsuario(BeanUsuario usu) {
+        usuarios.addElement(usu);
+        display.setCurrent(fCita);
+    }
+
+    void continuaCapturaCita() {
         display.setCurrent(fCita);
     }
 }
