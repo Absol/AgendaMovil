@@ -63,7 +63,10 @@ public class FormadorVectorEventos {
                     break;
                 }
                 case ConfirmacionReagendado.miTipo: {
-                    throw new UnsupportedOperationException("Not yet implemented");
+                    ConfirmacionReagendado reag = new ConfirmacionReagendado();
+                    reag.read(input);
+                    vector.addElement(reag);
+                    break;
                 }
             }
         }

@@ -24,7 +24,7 @@ public class AgendaPull extends MIDlet {
 
             Vector vecRecibir = servidor.pullEventos(vecEnviar);
 
-             new PullController(this, vecRecibir);
+            new PullController(this, vecRecibir);
         }else{
             destroyApp(true);
         }

@@ -95,4 +95,13 @@ public class UsuarioDAO extends AbstractDataDAO{
     }
     
 
+
+    public static BeanUsuario getMyUser() {
+        //To-Do desharcodear
+        return new BeanUsuario(1, "Absol", "Zapato");
+    }
+
+    public static void guardaMyUsuario(BeanUsuario myUsuer) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 }
