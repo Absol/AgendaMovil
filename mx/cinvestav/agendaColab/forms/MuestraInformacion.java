@@ -9,7 +9,7 @@ import javax.microedition.lcdui.TextField;
  */
 public class MuestraInformacion extends TextBox {
 
-    public MuestraInformacion(String titulo){
-        super(titulo, null, 127, TextField.UNEDITABLE);
+    public MuestraInformacion(){
+        super("", null, 127, TextField.UNEDITABLE);
     }
 }

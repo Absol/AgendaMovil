@@ -5,12 +5,17 @@ import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
+import mx.cinvestav.agendaColab.DAO.CItaDAO;
 import mx.cinvestav.agendaColab.DAO.EventoColaDAO;
+//import mx.cinvestav.agendaColab.pruebas.CItaDAO;
+//import mx.cinvestav.agendaColab.pruebas.EventoColaDAO;
 import mx.cinvestav.agendaColab.DAO.UsuarioDAO;
 import mx.cinvestav.agendaColab.comun.Cancelacion;
+import mx.cinvestav.agendaColab.comun.ConfirmacionReagendado;
 import mx.cinvestav.agendaColab.comun.Respuesta;
 import mx.cinvestav.agendaColab.comun.beans.BeanCita;
 import mx.cinvestav.agendaColab.comun.beans.BeanUsuario;
+import mx.cinvestav.agendaColab.forms.FechaForma;
 import mx.cinvestav.agendaColab.forms.MuestraInformacion;
 
 /**
@@ -20,8 +25,11 @@ class PullController implements CommandListener {
 private IteradorEventos iterador = null;
 private AgendaPull applic;
 private MuestraInformacion aviso;
-private EventoColaDAO dao = new EventoColaDAO();
+private EventoColaDAO daoCola = new EventoColaDAO();
+private CItaDAO daoCita = new CItaDAO();
 protected Display display = null;
+private FechaForma capFecha = null;
+private Command guardaModif = new Command("Aceptar", Command.OK, 1);
 private Command continuar = new Command("Aceptar", Command.OK, 1);
 private Command aceptar = new Command("Aceptar", Command.OK, 1);
 private Command cancel = new Command("Cancelar cita", Command.EXIT, 1);
@@ -33,7 +41,7 @@ protected BeanCita cita;
     public PullController(AgendaPull midlet, Vector eventos) {
         iterador = new IteradorEventos(eventos, this);
         display = Display.getDisplay(midlet);
-        aviso = new MuestraInformacion("");
+        aviso = new MuestraInformacion();
         applic = midlet;
 
         siguiente();
@@ -43,16 +51,28 @@ protected BeanCita cita;
         if(c == continuar){
             siguiente();
         } else if(c == cancel){
-            dao.guardarEvento(new Cancelacion(cita));
+            daoCola.guardarEvento(new Cancelacion(cita));
             siguiente();
         } else if(c == aceptar){
-            dao.guardarEvento(new Respuesta(cita, usuario, true));
+            daoCola.guardarEvento(new Respuesta(cita, usuario, true));
             siguiente();
         } else if(c == rechazar){
-            dao.guardarEvento(new Respuesta(cita, usuario, false));
+            daoCola.guardarEvento(new Respuesta(cita, usuario, false));
             siguiente();
         } else if(c == modificar){
-            throw new UnsupportedOperationException("Not yet implemented");
+            if(capFecha == null){
+                capFecha = new FechaForma("Cambiar la cita");
+                capFecha.addCommand(guardaModif);
+                capFecha.setSoloFecha();
+            }
+            capFecha.setDatos(cita);
+            capFecha.setCommandListener(this);
+            display.setCurrent(capFecha);
+        } else if(c == guardaModif){
+            cita = capFecha.getDatos();
+            daoCita.modificar(cita);
+            daoCola.guardarEvento(new ConfirmacionReagendado(new Vector(), cita));
+            siguiente();
         }
     }
 
@@ -106,9 +126,7 @@ protected BeanCita cita;
     protected void siguiente() {
         if(iterador.hasMoreElements()){
             iterador.procesa();
-        }
-        else
-        {
+        } else {
             this.applic.destroyApp(false);
             this.applic.notifyDestroyed();
         }

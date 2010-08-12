@@ -8,6 +8,9 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 import mx.cinvestav.agendaColab.DAO.ContactoDAO;
+import mx.cinvestav.agendaColab.DAO.SincronizacionDAO;
+//import mx.cinvestav.agendaColab.pruebas.ContactoDAO;
+//import mx.cinvestav.agendaColab.pruebas.SincronizacionDAO;
 import mx.cinvestav.agendaColab.comun.ActualizacionUsuariosSincronizados;
 import mx.cinvestav.agendaColab.comun.Cambio;
 import mx.cinvestav.agendaColab.comun.Cancelacion;
@@ -57,7 +60,9 @@ private PullController controller;
             case ActualizacionUsuariosSincronizados.miTipo: {
                 ActualizacionUsuariosSincronizados act
                         = (ActualizacionUsuariosSincronizados) eve;
-                throw new UnsupportedOperationException("Not yet implemented");
+                procesaActSinc(act);
+                controller.siguiente();
+                break;
             }
             case Sincronizacion.miTipo: {
                 Sincronizacion sincronizacion = (Sincronizacion) eve;
@@ -122,5 +127,10 @@ private PullController controller;
                 }
             }
         }
+    }
+
+    private void procesaActSinc(ActualizacionUsuariosSincronizados act) {
+        SincronizacionDAO dao = new SincronizacionDAO();
+        dao.create(act.getUsuario());
     }
 }
