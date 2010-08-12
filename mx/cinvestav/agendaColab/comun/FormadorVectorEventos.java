@@ -62,6 +62,9 @@ public class FormadorVectorEventos {
                     vector.addElement(conf);
                     break;
                 }
+                case ConfirmacionReagendado.miTipo: {
+                    throw new UnsupportedOperationException("Not yet implemented");
+                }
             }
         }
 
