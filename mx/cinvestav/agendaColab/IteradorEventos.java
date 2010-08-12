@@ -8,6 +8,9 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 import mx.cinvestav.agendaColab.DAO.ContactoDAO;
+import mx.cinvestav.agendaColab.DAO.SincronizacionDAO;
+//import mx.cinvestav.agendaColab.pruebas.ContactoDAO;
+//import mx.cinvestav.agendaColab.pruebas.SincronizacionDAO;
 import mx.cinvestav.agendaColab.comun.ActualizacionUsuariosSincronizados;
 import mx.cinvestav.agendaColab.comun.Cambio;
 import mx.cinvestav.agendaColab.comun.Cancelacion;
@@ -56,29 +59,33 @@ private PullController controller;
         switch (tipo) {
             case ActualizacionUsuariosSincronizados.miTipo: {
                 ActualizacionUsuariosSincronizados act
-                        = new ActualizacionUsuariosSincronizados();
-                throw new UnsupportedOperationException("Not yet implemented");
+                        = (ActualizacionUsuariosSincronizados) eve;
+                procesaActSinc(act);
+                controller.siguiente();
+                break;
             }
             case Sincronizacion.miTipo: {
-                Sincronizacion sincronizacion = new Sincronizacion();
+                Sincronizacion sincronizacion = (Sincronizacion) eve;
                 procesaSincro(sincronizacion);
+                controller.siguiente();
                 break;
             }
             case Cancelacion.miTipo: {
-                Cancelacion cancel = new Cancelacion();
+                Cancelacion cancel = (Cancelacion) eve;
                 controller.avisaCancelacion(cancel.getCita());
                 break;
             }
             case Respuesta.miTipo: {
-                Respuesta resp = new Respuesta();
-                controller.avisarRespuesta(resp.getCita(), resp.isRespuesta());
+                Respuesta resp = (Respuesta) eve;
+                controller.avisarRespuesta(resp.getCita()
+                        , resp.getUsuario(), resp.isRespuesta());
                 break;
             }
             case Notificacion.miTipo: {
                 throw new UnsupportedOperationException("Not yet implemented");
             }
             case Confirmacion.miTipo: {
-                Confirmacion conf = new Confirmacion();
+                Confirmacion conf = (Confirmacion) eve;
                 BeanUsuario usu
                         = (BeanUsuario) conf.getListaUsuarios().elementAt(0);
                 controller.pedirConfirmacion(conf.getCita(), usu);
@@ -89,10 +96,12 @@ private PullController controller;
             }
             case CitaPublica.miTipo: {
                 System.out.println("No se debe recibir CitaPublica");
+                controller.siguiente();
                 break;
             }
             case PullRequest.miTipo: {
                 System.out.println("No se debe recibir PullRequest");
+                controller.siguiente();
                 break;
             }
         }
@@ -106,14 +115,22 @@ private PullController controller;
             switch(camb.getTipoCambio()){
                 case Cambio.ALTA: {
                     dao.create(camb.getContacto());
+                    break;
                 }
                 case Cambio.BAJA: {
                     dao.borrar(new Integer(camb.getContacto().getidContacto()));
+                    break;
                 }
                 case Cambio.MODIFICACION: {
                     dao.modificar(camb.getContacto());
+                    break;
                 }
             }
         }
+    }
+
+    private void procesaActSinc(ActualizacionUsuariosSincronizados act) {
+        SincronizacionDAO dao = new SincronizacionDAO();
+        dao.create(act.getUsuario());
     }
 }
