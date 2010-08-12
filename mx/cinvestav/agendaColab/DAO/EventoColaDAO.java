@@ -88,13 +88,15 @@ public class EventoColaDAO  extends AbstractEventoColaDAO{
 	}
 
 
-        public Vector getListaEventos(){
+        public Vector getListaEventos(BeanUsuario user){
     	        RecordStore rs=datasource.getRecordStore();
-		String arr[],users[],citas[];
-		BeanContacto usr;
+		         String arr[],users[],citas[];
+		         BeanContacto usr;
                 BeanUsuario usuario;
                 BeanCita cita;
                 String usuarioString,citaString;
+                //Se añade al principio del Vector un usuario
+                vec.addElement(user);
 
 		 try{
 
