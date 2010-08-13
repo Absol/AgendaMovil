@@ -16,19 +16,21 @@ private BuscarUsuForma formaBusc = new BuscarUsuForma();
 private Command buscar = new Command("Buscar", Command.OK, 1);
 private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
 private BeanUsuario usuario = null;
-private FlujoController anterior;
+private FlujoController controller;
 private HttpPostAgenda server;
+private Displayable anterior;
 
-    public BuscaUsuarioControlelr(HttpPostAgenda post, FlujoController controllerMain) {
-        anterior = controllerMain;
+    public BuscaUsuarioControlelr(HttpPostAgenda post, FlujoController controllerMain, Displayable ant) {
+        controller = controllerMain;
         server = post;
         formaBusc.addCommand(buscar);
         formaBusc.addCommand(cancelar);
+        anterior = ant;
         formaBusc.setCommandListener(this);
     }
 
     public void buscaUsuario() {
-        anterior.display.setCurrent(formaBusc);
+        controller.display.setCurrent(formaBusc);
     }
 
     public void commandAction(Command c, Displayable d) {
@@ -37,7 +39,7 @@ private HttpPostAgenda server;
             formaBusc.removeCommand(cancelar);
             (new Thread(new hilo())).start();
         } else if (c == cancelar) {
-            anterior.continuaCapturaCita();
+            controller.continuaCapturaCita(anterior);
         }
     }
 
@@ -49,11 +51,11 @@ private HttpPostAgenda server;
         public void run() {
             BeanUsuario usu = server.buscaUsuario(new BeanUsuario(0, formaBusc.getLogin(), null));
             if (usu != null) {
-                anterior.addUsuario(usu);
+                controller.addUsuario(usu);
             } else {
-        formaBusc.addCommand(buscar);
-        formaBusc.addCommand(cancelar);
-                anterior.display.setCurrent(formaBusc);
+                formaBusc.addCommand(buscar);
+                formaBusc.addCommand(cancelar);
+                controller.display.setCurrent(anterior);
             }
         }
     }
