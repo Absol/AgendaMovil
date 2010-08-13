@@ -1,5 +1,6 @@
 package mx.cinvestav.agendaColab.utils.controller;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
 import mx.cinvestav.agendaColab.*;
@@ -29,10 +30,10 @@ public class FlujoController implements CommandListener {
 private GenericEventDAO cola = new EventoColaDAO();
 private CItaDAO cItaDAO=new CItaDAO();
 protected Display display;
+private int formAct;
 Agenda_Colaborativa applic;
 MenuPrincipal menu;
 F_Cita1 listaCitas = null;
-private FechaForma fCita = null;
 F_User f_user;
 private Vector usuarios = new Vector();
 private static HttpPostAgenda servidor = null;
@@ -40,14 +41,19 @@ private static HttpPostAgenda servidor = null;
 private Command exit = new Command("Salir", Command.EXIT, 1);
 private Command aceptar = new Command("Aceptar", Command.OK, 1);
 //Menu citas propias
+private Command regresarALista = new Command("Regresar", Command.EXIT, 1);
+private Command verCita = new Command("Ver", Command.SCREEN, 2);
 private Command nuevaCita = new Command("Nueva cita", Command.SCREEN, 2);
 private Command regresarPrincipal = new Command("Menú principal", Command.EXIT, 1);
-//Comandos Logging
+//Comandos Login
 private Command save = new Command("Guardar", Command.OK,1);
 //Captura cita
+private FechaForma fCita = null;
 private Command guardaCita = new Command("Guardar", Command.SCREEN, 2);
 private Command addUsuario = new Command("Agregar usuarios", Command.SCREEN, 2);
 private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
+//Citas agenas
+private CitaFormaReadOnly fMuestraCita = new CitaFormaReadOnly("Detalles Cita");
 
     HttpPostAgenda getServidor() {
         if (servidor == null) {
@@ -93,6 +99,11 @@ private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
             switch(menu.getSelectedIndex()){
                 case 0:{
                     muestraListaCitas();
+                    break;
+                }
+                case 1:{
+                    citasAgenas();
+                    break;
                 }
             }
         } else if(c == regresarPrincipal) {
@@ -102,7 +113,9 @@ private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
             display.setCurrent(menu);
             menu.setCommandListener(this);
         } else if(c == addUsuario) {
-            BuscaUsuarioControlelr busca = new BuscaUsuarioControlelr(servidor, this);
+            formAct = 0;
+            BuscaUsuarioControlelr busca = new BuscaUsuarioControlelr(servidor
+                    , this, fCita);
             busca.buscaUsuario();
         } else if(c == nuevaCita) {
             muestraCapturaCita();
@@ -110,8 +123,10 @@ private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
             //Poner dao guardar cita desde fCita
             BeanCita fcita=fCita.getDatos();
             cItaDAO=new CItaDAO();
-            cItaDAO.create(fcita);
-            
+            Integer id = (Integer) cItaDAO.create(fcita);
+            fcita = new BeanCita(id.intValue(), fcita.getAsunto()
+                    , fcita.getFechaInicio(), fcita.getFechaTermino()
+                    , fcita.getNivel(), 0);
             //Poner dao cola si el nivel es diferente de PRIVADO
             if(fcita.getNivel()!=BeanCita.PRIVADA)
                 cola.guardarEvento(new CitaPublica(fcita));
@@ -119,6 +134,15 @@ private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
                 cola.guardarEvento(new Confirmacion(usuarios, fcita));
             display.setCurrent(menu);
             menu.setCommandListener(this);
+        } else if(c == regresarALista) {
+            listaCitas.setCommandListener(this);
+            display.setCurrent(listaCitas);
+        } else if(c == verCita) {
+            BeanCita cita = listaCitas.getCitaSelected();
+            fMuestraCita.setCommandListener(this);
+            fMuestraCita.setDatos(cita);
+            fMuestraCita.addCommand(regresarALista);
+            display.setCurrent(fMuestraCita);
         }
     }
 
@@ -139,13 +163,11 @@ private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
             listaCitas.setTitle("Citas Propias");
         }
         listaCitas.addCommand(nuevaCita);
+        listaCitas.addCommand(verCita);
         listaCitas.addCommand(regresarPrincipal);
         listaCitas.setCommandListener(this);
         //Cargar citas almacenadas
-        //Vector vec = new Vector(3);
-        //vec.addElement(new BeanCita(2,"cita1", new Date(), new Date(), 2, 14));
-        //vec.addElement(new BeanCita(3,"cita2", new Date(), new Date(), 1, 15));
-        Vector vec=cItaDAO.getLista();
+        Vector vec = cItaDAO.getLista();
         listaCitas.setElementos(vec);
         display.setCurrent(listaCitas);
     }
@@ -165,12 +187,51 @@ private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
     }
 
     void addUsuario(BeanUsuario usu) {
-        usuarios.addElement(usu);
-        display.setCurrent(fCita);
+        if(formAct == 0)
+        {
+            usuarios.addElement(usu);
+            Alert alert = new Alert("Usuario agregado", "Se agrego el usuario "
+                + usu.getLogin(), null, AlertType.INFO);
+            alert.setTimeout(2000);
+            display.setCurrent(alert, fCita);
+        } else {
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.MONTH, Calendar.AUGUST);
+            cal.set(Calendar.YEAR, 2000);
+            cal.set(Calendar.DAY_OF_MONTH, 1);
+            Date fecIni = cal.getTime();
+            cal.set(Calendar.MONTH, Calendar.AUGUST);
+            cal.set(Calendar.YEAR, 2012);
+            cal.set(Calendar.DAY_OF_MONTH, 31);
+            Date fecFin = cal.getTime();
+            Vector citasAgn = servidor.getCitasAgenas(usu.getId(), fecIni, fecFin);
+            muestraCitasAgenas(citasAgn);
+        }
     }
 
-    void continuaCapturaCita() {
-        fCita.setCommandListener(this);
-        display.setCurrent(fCita);
+    void continuaCapturaCita(Displayable disp) {
+        disp.setCommandListener(this);
+        display.setCurrent(disp);
+    }
+
+    void citasAgenas(){
+        formAct = 1;
+        BuscaUsuarioControlelr busca = new BuscaUsuarioControlelr(servidor, this, menu);
+        busca.buscaUsuario();
+    }
+
+    private void muestraCitasAgenas(Vector citasAgn) {
+        if(listaCitas == null){
+            listaCitas = new F_Cita1("Citas Ajenas");
+        } else {
+            listaCitas.setTitle("Citas Ajenas");
+        }
+        listaCitas.removeCommand(nuevaCita);
+        listaCitas.addCommand(verCita);
+        listaCitas.addCommand(regresarPrincipal);
+        listaCitas.setCommandListener(this);
+        //Cargar citas almacenadas
+        listaCitas.setElementos(citasAgn);
+        display.setCurrent(listaCitas);
     }
 }
