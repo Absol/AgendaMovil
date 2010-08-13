@@ -30,12 +30,11 @@ public class F_Cita1 extends List implements CommandListener{
         
 
         Enumeration e=citas.elements();
+        deleteAll();
         while(e.hasMoreElements()){
             BeanCita citas=(BeanCita)e.nextElement();
             this.append(citas.getAsunto(),null);
         }
-
-        citas.removeAllElements();
     }
 
     public BeanCita getCitaSelected()

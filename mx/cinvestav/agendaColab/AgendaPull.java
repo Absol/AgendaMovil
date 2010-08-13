@@ -31,14 +31,14 @@ public class AgendaPull extends MIDlet {
                  System.out.println(enumeration.nextElement());
              }
             //new PullController(this, vecRecibir);
-        }else{
-            destroyApp(true);
         }
+            destroyApp(true);
     }
 
     public void pauseApp() {
     }
 
     public void destroyApp(boolean unconditional) {
+        notifyDestroyed ();
     }
 }
