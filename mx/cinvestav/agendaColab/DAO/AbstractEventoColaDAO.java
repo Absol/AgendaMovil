@@ -62,7 +62,7 @@ public abstract class AbstractEventoColaDAO implements GenericEventDAO{
                 while(re.hasNextElement()) {
                 try {
 
-                    rs.deleteRecord(i);
+                    rs.deleteRecord(re.nextRecordId());
                 } catch (RecordStoreNotOpenException ex) {
                     ex.printStackTrace();
                 } catch (InvalidRecordIDException ex) {
