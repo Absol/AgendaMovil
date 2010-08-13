@@ -38,7 +38,7 @@ public class CItaDAO extends AbstractDataDAO{
 		      BeanCita cita =(BeanCita)obj;
 		      ByteArrayOutputStream baos=new ByteArrayOutputStream();
 		      DataOutputStream dos = new DataOutputStream(baos);
-
+int id = 0;
 		      try {
 		    	dos.writeUTF(cita.toString());
 		    	
@@ -48,7 +48,7 @@ public class CItaDAO extends AbstractDataDAO{
 
 				byte[] datos = baos.toByteArray();
 
-	            int id = rs.addRecord(datos, 0, datos.length);
+	            id = rs.addRecord(datos, 0, datos.length);
 
 	            dos.close();
 
@@ -62,7 +62,7 @@ public class CItaDAO extends AbstractDataDAO{
 				//datasource.closeRecordStore();
 			}
 
-		return cita;
+		return new Integer(id);
 	}
 
 

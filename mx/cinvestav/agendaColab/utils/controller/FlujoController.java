@@ -114,7 +114,8 @@ private CitaFormaReadOnly fMuestraCita = new CitaFormaReadOnly("Detalles Cita");
             menu.setCommandListener(this);
         } else if(c == addUsuario) {
             formAct = 0;
-            BuscaUsuarioControlelr busca = new BuscaUsuarioControlelr(servidor, this, fCita);
+            BuscaUsuarioControlelr busca = new BuscaUsuarioControlelr(servidor
+                    , this, fCita);
             busca.buscaUsuario();
         } else if(c == nuevaCita) {
             muestraCapturaCita();
@@ -122,8 +123,10 @@ private CitaFormaReadOnly fMuestraCita = new CitaFormaReadOnly("Detalles Cita");
             //Poner dao guardar cita desde fCita
             BeanCita fcita=fCita.getDatos();
             cItaDAO=new CItaDAO();
-            cItaDAO.create(fcita);
-            
+            Integer id = (Integer) cItaDAO.create(fcita);
+            fcita = new BeanCita(id.intValue(), fcita.getAsunto()
+                    , fcita.getFechaInicio(), fcita.getFechaTermino()
+                    , fcita.getNivel(), 0);
             //Poner dao cola si el nivel es diferente de PRIVADO
             if(fcita.getNivel()!=BeanCita.PRIVADA)
                 cola.guardarEvento(new CitaPublica(fcita));
@@ -219,9 +222,9 @@ private CitaFormaReadOnly fMuestraCita = new CitaFormaReadOnly("Detalles Cita");
 
     private void muestraCitasAgenas(Vector citasAgn) {
         if(listaCitas == null){
-            listaCitas = new F_Cita1("Citas Agenas");
+            listaCitas = new F_Cita1("Citas Ajenas");
         } else {
-            listaCitas.setTitle("Citas Agenas");
+            listaCitas.setTitle("Citas Ajenas");
         }
         listaCitas.removeCommand(nuevaCita);
         listaCitas.addCommand(verCita);
