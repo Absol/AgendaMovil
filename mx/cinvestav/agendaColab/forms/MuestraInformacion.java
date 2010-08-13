@@ -10,6 +10,6 @@ import javax.microedition.lcdui.TextField;
 public class MuestraInformacion extends TextBox {
 
     public MuestraInformacion(){
-        super("", null, 127, TextField.UNEDITABLE);
+        super("", null, 255, TextField.UNEDITABLE);
     }
 }

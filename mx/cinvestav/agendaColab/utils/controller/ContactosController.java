@@ -5,6 +5,9 @@ import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import mx.cinvestav.agendaColab.DAO.ContactoDAO;
+import mx.cinvestav.agendaColab.DAO.EventoColaDAO;
+import mx.cinvestav.agendaColab.comun.Cambio;
+import mx.cinvestav.agendaColab.comun.Sincronizacion;
 import mx.cinvestav.agendaColab.comun.beans.BeanContacto;
 import mx.cinvestav.agendaColab.forms.F_Contactos;
 import mx.cinvestav.agendaColab.forms.ListaContactos;
@@ -14,6 +17,7 @@ import mx.cinvestav.agendaColab.forms.ListaContactos;
  */
 public class ContactosController implements CommandListener  {
 private ContactoDAO contDao = new ContactoDAO();
+private EventoColaDAO colaDao = new EventoColaDAO();
 private F_Contactos fContacto = new F_Contactos("Contactos");
 private ListaContactos listaContactos = new ListaContactos();
 private Command saveNuevo = new Command("Guardar", Command.OK,1);
@@ -25,10 +29,11 @@ private Command cambiar = new Command("Modificar", Command.SCREEN,2);
 private Command nuevo = new Command("Nuevo", Command.SCREEN,2);
 private FlujoController controller;
 protected Display display;
-
+private             Sincronizacion sincro;
     public ContactosController(FlujoController controller){
         this.controller = controller;
         this.display = controller.display;
+sincro = new Sincronizacion();
     }
 
     public void inciaContactos(){
@@ -43,6 +48,8 @@ protected Display display;
 
     public void commandAction(Command c, Displayable d) {
         if (c == regresa) {
+            if(sincro.getListaCambios().size() > 0)
+                colaDao.guardarEvento(sincro);
             controller.menuPrincipal();
         } else if(c == cancelar) {
             listaContactos.setCommandListener(this);
@@ -51,18 +58,22 @@ protected Display display;
         } else if(c == saveNuevo) {
             BeanContacto cont = fContacto.getContacto();
             contDao.create(cont);
+            sincro.add(new Cambio(cont, Cambio.ALTA));
             listaContactos.setCommandListener(this);
             listaContactos.setElementos(contDao.getLista());
             display.setCurrent(listaContactos);
         } else if(c == saveCambio) {
             BeanContacto cont = fContacto.getContacto();
             contDao.modificar(cont);
+            sincro.add(new Cambio(cont, Cambio.MODIFICACION));
             listaContactos.setCommandListener(this);
             listaContactos.setElementos(contDao.getLista());
             display.setCurrent(listaContactos);
         } else if(c == borrar) {
             BeanContacto cont = listaContactos.getContactoSelected();
             contDao.borrar(new Integer(cont.getidContacto()));
+            sincro.add(new Cambio(cont, Cambio.BAJA));
+            listaContactos.setElementos(contDao.getLista());
         } else if(c == cambiar) {
             fContacto.setTitle("Cambiar contacto");
             fContacto.addCommand(saveCambio);

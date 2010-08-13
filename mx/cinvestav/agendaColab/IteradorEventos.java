@@ -131,6 +131,10 @@ private PullController controller;
 
     private void procesaActSinc(ActualizacionUsuariosSincronizados act) {
         SincronizacionDAO dao = new SincronizacionDAO();
-        dao.create(act.getUsuario());
+        if(act.getTipoAct() == ActualizacionUsuariosSincronizados.NUEVA_SINCRO){
+        BeanUsuario usu = act.getUsuario();
+        usu = new BeanUsuario(usu.getId(), usu.getLogin(), "<--");
+        dao.create(usu);
+        }
     }
 }
