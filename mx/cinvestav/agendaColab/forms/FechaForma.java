@@ -1,5 +1,6 @@
 package mx.cinvestav.agendaColab.forms;
 
+import java.util.Date;
 import java.util.TimeZone;
 import javax.microedition.lcdui.Choice;
 import javax.microedition.lcdui.ChoiceGroup;
@@ -25,7 +26,9 @@ public class FechaForma extends Form {
         super(title);
         asunto = new TextField("Asunto", "", 30, TextField.ANY);
         fechaIni = new DateField("Hora de inicio:", DateField.DATE_TIME, TimeZone.getTimeZone("GMT"));
+        fechaIni.setDate(new Date());
         fechaFin = new DateField("Hora de término", DateField.DATE_TIME, TimeZone.getTimeZone("GMT"));
+        fechaFin.setDate(new Date());
         this.append(asunto);
         this.append(fechaIni);
         this.append(fechaFin);

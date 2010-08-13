@@ -21,7 +21,7 @@ public class AgendaPull extends MIDlet {
             EventoColaDAO cola = new EventoColaDAO();
             Vector vecEnviar, vecRecibir;
             vecEnviar = cola.getListaEventos(usu);
-            cola.deleteAllRecordStore("evento");
+            cola.deleteAllRecordStore();
 
           HttpPostAgenda servidor
                     = new HttpPostAgenda("belldandy.no-ip.info/AgendaServer/");

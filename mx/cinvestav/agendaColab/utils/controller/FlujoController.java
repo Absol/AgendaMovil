@@ -54,6 +54,7 @@ private Command addUsuario = new Command("Agregar usuarios", Command.SCREEN, 2);
 private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
 //Citas agenas
 private CitaFormaReadOnly fMuestraCita = new CitaFormaReadOnly("Detalles Cita");
+private ContactosController contactosController = null;
 
     HttpPostAgenda getServidor() {
         if (servidor == null) {
@@ -87,6 +88,10 @@ private CitaFormaReadOnly fMuestraCita = new CitaFormaReadOnly("Detalles Cita");
 //            display.setCurrent(menu);
 //        else
 //            display.setCurrent(f_user);
+        menuPrincipal();
+    }
+
+    protected void menuPrincipal(){
         menu.setCommandListener(this);
         display.setCurrent(menu);
     }
@@ -103,6 +108,12 @@ private CitaFormaReadOnly fMuestraCita = new CitaFormaReadOnly("Detalles Cita");
                 }
                 case 1:{
                     citasAgenas();
+                    break;
+                }
+                case 2:{
+                    if(contactosController == null)
+                        contactosController= new ContactosController(this);
+                    contactosController.inciaContactos();
                     break;
                 }
             }

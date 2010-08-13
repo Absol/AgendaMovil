@@ -8,7 +8,7 @@ public class MenuPrincipal extends List{
             super("Menu Principal",Choice.IMPLICIT);
             this.append("Citas Propias",null);
             this.append("Citas Agenas",null);
-//            this.append("Sincronizar",null);
+            this.append("Contactos",null);
 //            this.append("Ver Citas Grupo",null);
 //            this.append("Agenda Personal",null);
         }
