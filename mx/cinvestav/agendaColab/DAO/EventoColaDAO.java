@@ -6,6 +6,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Vector;
+import javax.microedition.rms.InvalidRecordIDException;
+import javax.microedition.rms.RecordEnumeration;
 
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
@@ -110,10 +112,14 @@ public class EventoColaDAO  extends AbstractEventoColaDAO{
                 vec.addElement(new PullRequest(user));
 
 		 try{
+                    RecordEnumeration re = rs.enumerateRecords(null, null, false);
 
-	            for(int i =1; i <= rs.getNumRecords();i++){
-
-	                String aux = getRecord(i,dataStorage);
+                     while(re.hasNextElement()){
+	            //for(int i =1; i <= rs.getNumRecords();i++){
+                          //String aux=new String(re.nextRecord());
+                           String aux = getRecord(re.nextRecordId(),dataStorage);
+                           System.out.println("aux: "+aux);
+	                //String aux = getRecord(i,dataStorage);
                         
 	                arr=Utils.split(aux,"*");
                         
@@ -188,13 +194,18 @@ public class EventoColaDAO  extends AbstractEventoColaDAO{
                                 break;
                         }
 
-
-	            }
-	        }catch(RecordStoreNotOpenException e){
-	            System.out.println(e.getMessage());
-	        }
+                     }
+	            //}
+	        } catch (InvalidRecordIDException ex) {
+            ex.printStackTrace();
+        } catch (RecordStoreNotOpenException ex) {
+            ex.printStackTrace();
+        } catch (RecordStoreException ex) {
+            ex.printStackTrace();
+        }
 	        return vec;
-      }
+
+        }
 
 
 	
