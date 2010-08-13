@@ -110,13 +110,13 @@ public class ContactoDAO extends AbstractDataDAO {
 		 try{
                     RecordEnumeration re = rs.enumerateRecords(null, null, false);
                     while(re.hasNextElement()){
-	            
-	                String aux = getRecord(re.nextRecordId(),dataStorage);
+	                int rid=re.nextRecordId();
+	                String aux = getRecord(rid,dataStorage);
 	                arr=Utils.split(aux,"-");
                         System.out.println("arr[0]: "+arr[0]);
                         int id=new Integer(Integer.parseInt(arr[0])).intValue();
                         int idUsu=new Integer(Integer.parseInt(arr[1])).intValue();
-	                usr=new BeanContacto(re.nextRecordId(), idUsu, arr[2], arr[3], arr[4], arr[5], arr[6]);
+	                usr=new BeanContacto(rid, idUsu, arr[2], arr[3], arr[4], arr[5], arr[6]);
 	                vec.addElement(usr);
 	            }
 	        } catch (InvalidRecordIDException ex) {
@@ -159,7 +159,7 @@ public class ContactoDAO extends AbstractDataDAO {
 	      cargar(new Integer(user.getIdUsuario()));
 		 try {
                        
-		    	dos.writeUTF(user.toString());
+		    	        dos.writeUTF(user.toString());
 				//dos.writeUTF(usr.getName() + "-" + usr.getPass());
 
 				dos.flush();
