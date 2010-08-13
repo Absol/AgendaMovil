@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Vector;
 
 import javax.microedition.rms.InvalidRecordIDException;
+import javax.microedition.rms.RecordEnumeration;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreNotFoundException;
@@ -57,8 +58,10 @@ public abstract class AbstractEventoColaDAO implements GenericEventDAO{
 
 
             try {
-                for (int i = 1; i <= rs.getNumRecords(); i++) {
+                RecordEnumeration re = rs.enumerateRecords(null, null, false);
+                while(re.hasNextElement()) {
                 try {
+
                     rs.deleteRecord(i);
                 } catch (RecordStoreNotOpenException ex) {
                     ex.printStackTrace();
