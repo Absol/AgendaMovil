@@ -78,24 +78,7 @@ public class ContactoDAO extends AbstractDataDAO {
 		BeanContacto usr;
 		 try{
 	            System.out.println("antes de borrar");
-	            for(int i =1; i <= rs.getNumRecords();i++){
-	            	System.out.println("despues de borrar");
-	                String aux = getRecord(i,dataStorage);
-	                arr=Utils.split(aux,"-");
-                        //BeanContacto(int id, int idUsu, String nombre, String apPaterno,String apMaterno, String email, String telefono);
-                        int id=new Integer(Integer.parseInt(arr[0])).intValue();
-                        int idUsu=new Integer(Integer.parseInt(arr[1])).intValue();
-                        usr=new BeanContacto(id, idUsu, arr[2], arr[3], arr[4], arr[5], arr[6]);
-	                //usr=new User(arr[0],arr[1],new Date(),new Integer(Integer.parseInt(arr[3])),arr[4],1,arr[6],arr[7],arr[8],3);
-	                Integer clv=new Integer(Integer.parseInt(arr[0]));
-	                System.out.println("clave*******: "+clv);
-	                if(clv.equals(identifier)){
-	                	rs.deleteRecord(i);
-	                	vec.removeElement(usr);
-	                	return true;
-	                }
-
-	            }
+	                	rs.deleteRecord(identifier.intValue());
 	        }catch(Exception e){
 	            e.printStackTrace();
 	        }
@@ -166,7 +149,7 @@ public class ContactoDAO extends AbstractDataDAO {
 
 				byte[] datos = baos.toByteArray();
 
-				rs.setRecord(1, datos, 0, datos.length);
+				rs.setRecord(user.getidContacto(), datos, 0, datos.length);
 
 
 

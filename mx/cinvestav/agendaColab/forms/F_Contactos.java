@@ -36,7 +36,7 @@ public class F_Contactos extends Form {
 
    public void setContacto(BeanContacto contacto){
        this.contacto=contacto;
-       id=contacto.getIdUsuario();
+       id=contacto.getidContacto();
        idUsuario=contacto.getIdUsuario();
        name.setString(contacto.getnombre());
        apPaterno.setString(contacto.getapPaterno());

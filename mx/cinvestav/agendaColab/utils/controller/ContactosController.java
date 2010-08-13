@@ -29,7 +29,8 @@ private Command cambiar = new Command("Modificar", Command.SCREEN,2);
 private Command nuevo = new Command("Nuevo", Command.SCREEN,2);
 private FlujoController controller;
 protected Display display;
-private             Sincronizacion sincro;
+private Sincronizacion sincro;
+
     public ContactosController(FlujoController controller){
         this.controller = controller;
         this.display = controller.display;
@@ -76,16 +77,16 @@ sincro = new Sincronizacion();
             listaContactos.setElementos(contDao.getLista());
         } else if(c == cambiar) {
             fContacto.setTitle("Cambiar contacto");
+            fContacto.removeCommand(saveNuevo);
             fContacto.addCommand(saveCambio);
-            fContacto.removeCommand(saveCambio);
             fContacto.addCommand(cancelar);
             fContacto.setContacto(listaContactos.getContactoSelected());
             fContacto.setCommandListener(this);
             display.setCurrent(fContacto);
         } else if(c == nuevo) {
             fContacto.setTitle("Alta contacto");
-            fContacto.addCommand(saveNuevo);
             fContacto.removeCommand(saveCambio);
+            fContacto.addCommand(saveNuevo);
             fContacto.addCommand(cancelar);
             fContacto.setContacto(new BeanContacto());
             fContacto.setCommandListener(this);
