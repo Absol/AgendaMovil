@@ -102,7 +102,7 @@ public class ContactoDAO extends AbstractDataDAO {
     	RecordStore rs=datasource.getRecordStore();
 		String arr[];
 		BeanContacto usr;
-
+                 vec = new Vector();
 		 try{
 
 	            for(int i =1; i <= rs.getNumRecords();i++){
@@ -152,8 +152,10 @@ public class ContactoDAO extends AbstractDataDAO {
 	      DataOutputStream dos = new DataOutputStream(baos);
 	      cargar(new Integer(user.getIdUsuario()));
 		 try {
+                       
 		    	dos.writeUTF(user.toString());
 				//dos.writeUTF(usr.getName() + "-" + usr.getPass());
+
 				dos.flush();
 
 				byte[] datos = baos.toByteArray();
