@@ -76,7 +76,7 @@ public class SincronizacionDAO extends AbstractDataDAO{
     public Vector getLista() {
         RecordStore rs=datasource.getRecordStore();
 		String arr[];
-		BeanUsuario usuario = null;
+		
                 vec = new Vector();
 		 try{
 
@@ -92,6 +92,33 @@ public class SincronizacionDAO extends AbstractDataDAO{
 	        }
 	     return vec;
     }
+
+    public boolean borrar(BeanUsuario usr) {
+		RecordStore rs=datasource.getRecordStore();
+		String arr[];
+                String usrStr=usr.toString();
+
+		 try{
+
+	            for(int i =1; i <= rs.getNumRecords();i++){
+	            	String aux = getRecord(i,dataStorage);
+	            	arr=Utils.split(usrStr,"-");
+                     
+	                String login=arr[1];
+
+	                if(login.equals(usr.getLogin())){
+	                	rs.deleteRecord(i);
+	                	System.out.println("Se borro correctamente el registro");
+	                	vec.removeElementAt(i);
+	                	return true;
+	                }
+
+	            }
+	        }catch(Exception e){
+	            e.printStackTrace();
+	        }
+	     return false;
+	}
 
 
 

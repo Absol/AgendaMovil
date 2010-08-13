@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
+import javax.microedition.rms.InvalidRecordIDException;
+import javax.microedition.rms.RecordEnumeration;
 
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
@@ -76,7 +78,7 @@ public class UsuarioDAO extends AbstractDataDAO{
 	            	
 	                String aux = getRecord(i,dataStorage);
 	                arr=Utils.split(aux,"-");
-	                if(arr[0].equals(nombre) && arr[8].equals(passwd))
+	                if(arr[1].equals(nombre) && arr[2].equals(passwd))
 	                	return true;
 	                
 	            }
@@ -86,6 +88,8 @@ public class UsuarioDAO extends AbstractDataDAO{
 	     return false;   
 	}
 
+
+
     public Object cargar(Integer id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -93,15 +97,69 @@ public class UsuarioDAO extends AbstractDataDAO{
     public Vector getLista() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+
     
 
 
     public static BeanUsuario getMyUser() {
-        //To-Do desharcodear
-        return new BeanUsuario(1, "Absol", "Zapato");
+        try {
+            //To-Do desharcodear
+            SimpleDataSource dataSource = SimpleDataSource.getInstance("users");
+            RecordStore rs = dataSource.getRecordStore();
+            RecordEnumeration re = rs.enumerateRecords(null, null, false);
+              if(re.hasNextElement()){
+                    BeanUsuario usr;
+                    String[] arrUsr;
+                    String usrString = new String(rs.getRecord(1));
+                    arrUsr = Utils.split(usrString, "-");
+                    int id = new Integer(Integer.parseInt(arrUsr[0])).intValue();
+                    String login = arrUsr[1];
+                    String pass = arrUsr[2];
+                    usr = new BeanUsuario(id, login, pass);
+                    return usr;
+             }
+             else{
+                return null;
+             }
+        } catch (RecordStoreNotOpenException ex) {
+            ex.printStackTrace();
+        } catch (InvalidRecordIDException ex) {
+            ex.printStackTrace();
+        } catch (RecordStoreException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
-    public static void guardaMyUsuario(BeanUsuario myUsuer) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public static void guardaMyUsuario(BeanUsuario myUser) {
+        SimpleDataSource dataSource=SimpleDataSource.getInstance("users");
+        RecordStore rs=dataSource.getRecordStore();
+        ByteArrayOutputStream baos=new ByteArrayOutputStream();
+	 DataOutputStream dos = new DataOutputStream(baos);
+
+		   try {
+		    	dos.writeUTF(myUser.toString());
+
+			dos.flush();
+
+			byte[] datos = baos.toByteArray();
+
+	                int id = rs.addRecord(datos, 0, datos.length);
+
+	                dos.close();
+
+	                 baos.close();
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}catch(RecordStoreException e){
+				e.printStackTrace();
+			}finally{
+				//datasource.closeRecordStore();
+			}
+
+		
+
     }
 }
