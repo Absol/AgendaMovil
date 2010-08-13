@@ -70,4 +70,14 @@ public class Sincronizacion extends Evento {
     public Vector getListaCambios() {
         return listaCambios;
     }
+    /**
+     * @return the listaCambios
+     */
+    public void setListaCambios(Vector listaCambios){
+        this.listaCambios=listaCambios;
+    }
+
+    public String toString(){
+        return miTipo+"*"+listaCambios;
+    }
 }

@@ -22,6 +22,6 @@ public static final int miTipo = 14;
     }
 
     public String toString() {
-        return "ConfirmacionReagendado{" + "cita=" + cita + "listaUsuarios=" + listaUsuarios + '}';
+        return  miTipo+"*"+cita+"*"+listaUsuarios;
     }
 }

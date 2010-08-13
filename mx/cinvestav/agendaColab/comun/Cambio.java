@@ -40,7 +40,7 @@ public class Cambio {
         return tipoCambio;
     }
     public String toString(){
-        return contacto+" tipo de modificacion: "+tipoCambio;
+        return contacto+"?"+tipoCambio;
     }
 
 

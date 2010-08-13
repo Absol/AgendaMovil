@@ -11,7 +11,9 @@ package mx.cinvestav.agendaColab.utils;
  */
 import java.util.Date;
 import java.util.Vector;
+import mx.cinvestav.agendaColab.comun.Cambio;
 import mx.cinvestav.agendaColab.comun.beans.BeanCita;
+import mx.cinvestav.agendaColab.comun.beans.BeanContacto;
 import mx.cinvestav.agendaColab.comun.beans.BeanUsuario;
 
 public class Utils {
@@ -63,6 +65,24 @@ public class Utils {
 
         }
 
+        public static BeanContacto stringToContacto(String contactoStr){
+            String contacto[];
+            contacto=split(contactoStr,"-");
+            contacto[0]=contacto[0].trim();
+            int id=new Integer(Integer.parseInt(contacto[0])).intValue();
+            contacto[1]=contacto[1].trim();
+            int idUsu=new Integer(Integer.parseInt(contacto[1])).intValue();
+            String nombre=contacto[2];
+            String apPaterno=contacto[3];
+            String apMaterno=contacto[4];
+            String email=contacto[5];
+            String telefono=contacto[6];
+
+            BeanContacto con=new BeanContacto(id, idUsu, nombre, apPaterno, apMaterno, email, telefono);
+
+            return con;
+        }
+
         public static Vector stringToUserVector(String vecStr){
             Vector vecUsrs=new Vector();
             String usrStr[];
@@ -77,6 +97,29 @@ public class Utils {
                 vecUsrs.addElement(usuario);
             }
             return vecUsrs;
+        }
+
+        public static Vector stringToCambioVector(String vecStr){
+            Vector vecCambio=new Vector();
+            String cambioStr[],str[];
+            int begin=vecStr.indexOf('[')+1;
+            int end=vecStr.indexOf(']');
+
+            String cambioString=vecStr.substring(begin, end);
+
+            cambioStr=split(cambioString, ",");
+            for(int i=0;i<cambioStr.length;i++){
+                cambioStr[i]=cambioStr[i];
+                str=split(cambioStr[i],"?");
+
+                BeanContacto contacto=stringToContacto(str[0]);
+                int tipo=new Integer(Integer.parseInt(str[1])).intValue();
+                
+                Cambio c=new Cambio(contacto, tipo);
+                vecCambio.addElement(c);
+            }
+
+            return vecCambio;
         }
 
 }

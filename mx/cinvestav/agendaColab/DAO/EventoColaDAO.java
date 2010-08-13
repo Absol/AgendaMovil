@@ -13,8 +13,10 @@ import javax.microedition.rms.RecordStoreNotOpenException;
 
 import mx.cinvestav.agendaColab.comun.ActualizacionUsuariosSincronizados;
 import mx.cinvestav.agendaColab.comun.Cambio;
+import mx.cinvestav.agendaColab.comun.Cancelacion;
 import mx.cinvestav.agendaColab.comun.CitaPublica;
 import mx.cinvestav.agendaColab.comun.Confirmacion;
+import mx.cinvestav.agendaColab.comun.ConfirmacionReagendado;
 import mx.cinvestav.agendaColab.comun.Evento;
 import mx.cinvestav.agendaColab.comun.PullRequest;
 import mx.cinvestav.agendaColab.comun.Respuesta;
@@ -47,6 +49,10 @@ public class EventoColaDAO  extends AbstractEventoColaDAO{
                   dos.writeUTF(aus.toString());
 	    	  //System.out.println("Soy una ActualizacionUsuariosSincronizados "+aus);
 	      }
+              if(e instanceof Cancelacion){
+                  Cancelacion c=(Cancelacion)e;
+                  dos.writeUTF(c.toString());
+              }
 
 	      if (e instanceof CitaPublica){
                   CitaPublica cp=(CitaPublica)e;
@@ -58,6 +64,10 @@ public class EventoColaDAO  extends AbstractEventoColaDAO{
                   dos.writeUTF(c.toString());
 	    	  //System.out.println("Soy una Confirmacion "+c);
 	      }
+              if (e instanceof ConfirmacionReagendado){
+                  ConfirmacionReagendado cr=(ConfirmacionReagendado)e;
+                  dos.writeUTF(cr.toString());
+              }
 	      if (e instanceof Respuesta){
                   Respuesta r=(Respuesta)e;
                   dos.writeUTF(r.toString());
@@ -118,6 +128,12 @@ public class EventoColaDAO  extends AbstractEventoColaDAO{
                                 ActualizacionUsuariosSincronizados aus=new ActualizacionUsuariosSincronizados(usuario, tipo);
                                 vec.addElement(aus);
                                 break;
+                            case Cancelacion.miTipo:
+                                citaString=arr[1];
+                                cita=Utils.stringToCita(citaString);
+                                Cancelacion can=new Cancelacion(cita);
+                                vec.addElement(can);
+                                break;
                             case CitaPublica.miTipo:
                                 //Formo Cita
                                 citaString=arr[1];
@@ -133,6 +149,15 @@ public class EventoColaDAO  extends AbstractEventoColaDAO{
                                 Vector vecUsrs=Utils.stringToUserVector(arr[2]);
                                 Confirmacion c=new Confirmacion(vecUsrs, cita);
                                 vec.addElement(c);
+                                break;
+                            case ConfirmacionReagendado.miTipo:
+                                //Formo Cita
+                                citaString=arr[1];
+                                cita=Utils.stringToCita(citaString);
+                                //Formo vector de usuarios
+                                Vector vecUsrs2=Utils.stringToUserVector(arr[2]);
+                                ConfirmacionReagendado c2=new ConfirmacionReagendado(vecUsrs2, cita);
+                                vec.addElement(c2);
                                 break;
                             case Respuesta.miTipo:
                                 //Forma cita
@@ -154,6 +179,12 @@ public class EventoColaDAO  extends AbstractEventoColaDAO{
                                 vec.addElement(res);
                                 break;
                             case Sincronizacion.miTipo:
+                                System.out.println("lista de cambios: "+arr[1]);
+                                Vector vecCambio=Utils.stringToCambioVector(arr[1]);
+                                Sincronizacion s=new Sincronizacion();
+                                s.setListaCambios(vecCambio);
+                                vec.addElement(s);
+                                System.out.println("sincro: "+s);
                                 break;
                         }
 

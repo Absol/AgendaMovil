@@ -60,5 +60,8 @@ public class Cancelacion extends Evento{
         return cita;
     }
 
+    public String toString(){
+        return miTipo+"*"+cita.toString();
+    }
 
 }
