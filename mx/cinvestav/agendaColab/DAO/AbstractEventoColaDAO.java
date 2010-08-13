@@ -52,13 +52,27 @@ public abstract class AbstractEventoColaDAO implements GenericEventDAO{
         return toReturn;
     }
 
-    public void deleteAllRecordStore(String dataStorage) {
-        try {
-            datasource.closeRecordStore();
-            RecordStore.deleteRecordStore(dataStorage);
-        } catch (RecordStoreException ex) {
-            ex.printStackTrace();
-        }
+    public void deleteAllRecordStore()  {
+                RecordStore rs=datasource.getRecordStore();
+
+
+            try {
+                for (int i = 1; i <= rs.getNumRecords(); i++) {
+                try {
+                    rs.deleteRecord(i);
+                } catch (RecordStoreNotOpenException ex) {
+                    ex.printStackTrace();
+                } catch (InvalidRecordIDException ex) {
+                    ex.printStackTrace();
+                } catch (RecordStoreException ex) {
+                    ex.printStackTrace();
+                }
+
+                }
+
+                } catch (RecordStoreNotOpenException ex) {
+                ex.printStackTrace();
+                }
     }
 	
 
