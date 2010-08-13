@@ -8,6 +8,7 @@ import java.util.Enumeration;
 import javax.microedition.lcdui.*;
 import mx.cinvestav.agendaColab.comun.beans.BeanCita;
 import java.util.Vector;
+import mx.cinvestav.agendaColab.comun.beans.BeanUsuario;
 
 /**
  *
@@ -36,8 +37,8 @@ public class F_ListaSincros extends List implements CommandListener{
         }
     }
 
-    public String  getCitaSelected()
-          {return (String)sincros.elementAt(this.getSelectedIndex());
+    public BeanUsuario getSincSelected(){
+        return (BeanUsuario)sincros.elementAt(this.getSelectedIndex());
     }
 
     public void load_contac(String contact){

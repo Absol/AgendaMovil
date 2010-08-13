@@ -6,27 +6,20 @@ import java.util.Vector;
 import mx.cinvestav.agendaColab.*;
 import javax.microedition.lcdui.*;
 import mx.cinvestav.agendaColab.DAO.CItaDAO;
-import mx.cinvestav.agendaColab.comun.Cambio;
-import mx.cinvestav.agendaColab.comun.beans.BeanContacto;
 import mx.cinvestav.agendaColab.comun.beans.BeanUsuario;
 import mx.cinvestav.agendaColab.forms.*;
 import mx.cinvestav.movil.http.HttpPostAgenda;
-import mx.cinvestav.agendaColab.DAO.ContactosDao;
 import mx.cinvestav.agendaColab.DAO.EventoColaDAO;
 import mx.cinvestav.agendaColab.DAO.GenericEventDAO;
 import mx.cinvestav.agendaColab.DAO.UsuarioDAO;
-import mx.cinvestav.agendaColab.comun.ActualizacionUsuariosSincronizados;
 import mx.cinvestav.agendaColab.comun.CitaPublica;
 import mx.cinvestav.agendaColab.comun.Confirmacion;
-import mx.cinvestav.agendaColab.comun.ConfirmacionReagendado;
-import mx.cinvestav.agendaColab.comun.Sincronizacion;
 import mx.cinvestav.agendaColab.comun.beans.BeanCita;
 
 /**
- *
  * @author eduardogiron
  */
-public class FlujoController implements CommandListener {
+public class FlujoController implements CommandListener, Controller {
 private GenericEventDAO cola = new EventoColaDAO();
 private CItaDAO cItaDAO=new CItaDAO();
 protected Display display;
@@ -55,6 +48,7 @@ private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
 //Citas agenas
 private CitaFormaReadOnly fMuestraCita = new CitaFormaReadOnly("Detalles Cita");
 private ContactosController contactosController = null;
+private SincrosController sincrosController = null;
 
     HttpPostAgenda getServidor() {
         if (servidor == null) {
@@ -114,6 +108,12 @@ private ContactosController contactosController = null;
                     if(contactosController == null)
                         contactosController= new ContactosController(this);
                     contactosController.inciaContactos();
+                    break;
+                }
+                case 3:{
+                    if(sincrosController == null)
+                        sincrosController= new SincrosController(this);
+                    sincrosController.inciaSincros();
                     break;
                 }
             }
@@ -197,7 +197,7 @@ private ContactosController contactosController = null;
         display.setCurrent(fCita);
     }
 
-    void addUsuario(BeanUsuario usu) {
+    public void addUsuario(BeanUsuario usu) {
         if(formAct == 0)
         {
             usuarios.addElement(usu);
@@ -220,7 +220,7 @@ private ContactosController contactosController = null;
         }
     }
 
-    void continuaCapturaCita(Displayable disp) {
+    public void continuaCapturaCita(Displayable disp) {
         disp.setCommandListener(this);
         display.setCurrent(disp);
     }
@@ -244,5 +244,9 @@ private ContactosController contactosController = null;
         //Cargar citas almacenadas
         listaCitas.setElementos(citasAgn);
         display.setCurrent(listaCitas);
+    }
+
+    public Display getDisplay() {
+        return display;
     }
 }

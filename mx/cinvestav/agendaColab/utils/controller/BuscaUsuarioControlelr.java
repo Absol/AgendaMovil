@@ -1,5 +1,7 @@
 package mx.cinvestav.agendaColab.utils.controller;
 
+import javax.microedition.lcdui.Alert;
+import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Displayable;
 import mx.cinvestav.agendaColab.comun.beans.BeanUsuario;
@@ -16,21 +18,21 @@ private BuscarUsuForma formaBusc = new BuscarUsuForma();
 private Command buscar = new Command("Buscar", Command.OK, 1);
 private Command cancelar = new Command("Cancelar", Command.EXIT, 1);
 private BeanUsuario usuario = null;
-private FlujoController controller;
+private Controller controller;
 private HttpPostAgenda server;
 private Displayable anterior;
 
-    public BuscaUsuarioControlelr(HttpPostAgenda post, FlujoController controllerMain, Displayable ant) {
+    public BuscaUsuarioControlelr(HttpPostAgenda post, Controller controllerMain, Displayable ant) {
         controller = controllerMain;
         server = post;
-        formaBusc.addCommand(buscar);
-        formaBusc.addCommand(cancelar);
         anterior = ant;
         formaBusc.setCommandListener(this);
     }
 
     public void buscaUsuario() {
-        controller.display.setCurrent(formaBusc);
+        formaBusc.addCommand(buscar);
+        formaBusc.addCommand(cancelar);
+        controller.getDisplay().setCurrent(formaBusc);
     }
 
     public void commandAction(Command c, Displayable d) {
@@ -55,7 +57,11 @@ private Displayable anterior;
             } else {
                 formaBusc.addCommand(buscar);
                 formaBusc.addCommand(cancelar);
-                controller.display.setCurrent(anterior);
+                Alert alert = new Alert("Usuario no encontrado"
+                        , "No se encontró el usuario "
+                        + formaBusc.getLogin(), null, AlertType.INFO);
+                alert.setTimeout(1500);
+                controller.getDisplay().setCurrent(alert, formaBusc);
             }
         }
     }

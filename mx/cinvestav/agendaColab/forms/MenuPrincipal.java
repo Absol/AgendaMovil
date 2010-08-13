@@ -9,7 +9,6 @@ public class MenuPrincipal extends List{
             this.append("Citas Propias",null);
             this.append("Citas Agenas",null);
             this.append("Contactos",null);
-//            this.append("Ver Citas Grupo",null);
-//            this.append("Agenda Personal",null);
+            this.append("Sincronizacion",null);
         }
 }

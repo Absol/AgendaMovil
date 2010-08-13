@@ -55,6 +55,7 @@ protected BeanCita cita;
             siguiente();
         } else if(c == aceptar){
             daoCola.guardarEvento(new Respuesta(cita, usuario, true));
+            daoCita.create(cita);
             siguiente();
         } else if(c == rechazar){
             daoCola.guardarEvento(new Respuesta(cita, usuario, false));

@@ -77,7 +77,7 @@ public class SincronizacionDAO extends AbstractDataDAO{
         RecordStore rs=datasource.getRecordStore();
 		String arr[];
 		BeanUsuario usuario = null;
-
+                vec = new Vector();
 		 try{
 
 	            for(int i =1; i <= rs.getNumRecords();i++){
