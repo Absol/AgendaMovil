@@ -7,7 +7,7 @@ import mx.cinvestav.agendaColab.comun.beans.BeanUsuario;
 
 public class ActualizacionUsuariosSincronizados extends Evento {
 
-    private int tipoActualizacion;
+    
     private BeanUsuario usuario;
     private int tipoAct;
     public static final int miTipo = 1;
