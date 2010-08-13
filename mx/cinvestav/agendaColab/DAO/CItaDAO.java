@@ -105,7 +105,7 @@ int id = 0;
     	RecordStore rs=datasource.getRecordStore();
 		String arr[];
 		BeanCita cita;
-
+                vec = new Vector();
 		 try{
 
 	            for(int i =1; i <= rs.getNumRecords();i++){

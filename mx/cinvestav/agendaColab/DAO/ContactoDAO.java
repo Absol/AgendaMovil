@@ -13,6 +13,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Vector;
+import javax.microedition.rms.InvalidRecordIDException;
+import javax.microedition.rms.RecordEnumeration;
 
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
@@ -31,9 +33,11 @@ public class ContactoDAO extends AbstractDataDAO {
 	
     private static final String dataStorage="contacto";
 
+
 	public ContactoDAO(){
 		//super(objMidlet);
 		datasource=SimpleDataSource.getInstance(dataStorage);
+
 	}
 
 	public Object create(Object obj) {
@@ -104,18 +108,20 @@ public class ContactoDAO extends AbstractDataDAO {
 		BeanContacto usr;
                  vec = new Vector();
 		 try{
-
-	            for(int i =1; i <= rs.getNumRecords();i++){
-
-	                String aux = getRecord(i,dataStorage);
+                    RecordEnumeration re = rs.enumerateRecords(null, null, false);
+                    while(re.hasNextElement()){
+	            
+	                String aux = getRecord(re.nextRecordId(),dataStorage);
 	                arr=Utils.split(aux,"-");
                         System.out.println("arr[0]: "+arr[0]);
                         int id=new Integer(Integer.parseInt(arr[0])).intValue();
                         int idUsu=new Integer(Integer.parseInt(arr[1])).intValue();
-	                usr=new BeanContacto(id, idUsu, arr[2], arr[3], arr[4], arr[5], arr[6]);
+	                usr=new BeanContacto(re.nextRecordId(), idUsu, arr[2], arr[3], arr[4], arr[5], arr[6]);
 	                vec.addElement(usr);
 	            }
-	        }catch(RecordStoreNotOpenException e){
+	        } catch (InvalidRecordIDException ex) {
+            ex.printStackTrace();
+        }catch(RecordStoreNotOpenException e){
 	            System.out.println(e.getMessage());
 	        }
 	     return vec;
