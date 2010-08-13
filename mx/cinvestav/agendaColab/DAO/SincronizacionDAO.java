@@ -46,7 +46,7 @@ public class SincronizacionDAO extends AbstractDataDAO{
                   DataOutputStream dos = new DataOutputStream(baos);
 
                   try {
-                    dos.writeUTF("->"+user.toString());
+                    dos.writeUTF(user.getPass()+" "+user.getLogin());
 
                             dos.flush();
 
